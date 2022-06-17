@@ -87,7 +87,7 @@ class CorpusTui(App):
         """Call after terminal goes in to application mode"""
         self.body = ScrollView(FileView())
 
-        grid = await self.view.dock_grid(edge='left',size=30, name='sidebar')
+        grid = await self.view.dock_grid(edge='left', size=30, name='sidebar')
         grid.add_column(fraction=1, name="left", min_size=30)
         grid.add_row(fraction=6, name="top", min_size=5)
         grid.add_row(fraction=1, name="bottom", min_size=3)
