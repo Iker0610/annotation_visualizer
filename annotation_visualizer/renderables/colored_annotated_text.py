@@ -4,7 +4,7 @@ from rich.text import Text
 from ..model.model import AnnotatedText
 
 style_mapper = {
-    "RAZON_CONSULTA": "black on #b6d7a8",
+    "RAZON_CONSULTA": "black on #98c379",
     "ANTECEDENTES_PERSONALES": "black on #d9d9d9",
     "ANTECEDENTES_FAMILIARES": "black on #94aa6d",
     "EXPLORACION": "black on #c9c5ff",
