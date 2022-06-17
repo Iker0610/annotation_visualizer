@@ -1,7 +1,7 @@
 from rich.console import RichCast
 from rich.text import Text
 
-from app.model.model import AnnotatedText
+from ..model.model import AnnotatedText
 
 style_mapper = {
     "RAZON_CONSULTA": "black on #b6d7a8",

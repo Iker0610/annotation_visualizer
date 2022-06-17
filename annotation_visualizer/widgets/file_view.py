@@ -5,8 +5,8 @@ from rich.console import RichCast
 from rich.panel import Panel
 from textual.widget import Widget
 
-from app import styles
-from app.renderables.colored_annotated_text import ColoredAnnotatedText
+from .. import styles
+from ..renderables.colored_annotated_text import ColoredAnnotatedText
 
 
 class FileView(Widget):

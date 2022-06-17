@@ -6,9 +6,9 @@ from textual.app import App
 from textual.driver import Driver
 from textual.widgets import ScrollView
 
-from model.model import GroupedAnnotatedDataset, load_grouped_annotated_dataset, AnnotatedText
-from widgets.dataset_file_list import DatasetFileList
-from widgets.file_view import FileView
+from annotation_visualizer.model.model import GroupedAnnotatedDataset, load_grouped_annotated_dataset, AnnotatedText
+from annotation_visualizer.widgets.dataset_file_list import DatasetFileList
+from annotation_visualizer.widgets.file_view import FileView
 
 
 class CorpusTui(App):
@@ -81,7 +81,3 @@ class CorpusTui(App):
         """Call after terminal goes in to application mode"""
         await self.view.dock(self.dataset_file_list_widget, edge='left', size=48, name='file_list')
         await self.view.dock(ScrollView(self.body), edge='right')
-
-
-if __name__ == '__main__':
-    CorpusTui.run()

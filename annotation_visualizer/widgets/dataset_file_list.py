@@ -7,9 +7,9 @@ from textual import events
 from textual.keys import Keys
 from textual.widget import Widget
 
-from app import styles
-from app.model.model import GroupedAnnotatedDataset
-from app.renderables.scrollable_list import ScrollableList
+from .. import styles
+from ..model.model import GroupedAnnotatedDataset
+from ..renderables.scrollable_list import ScrollableList
 
 
 class DatasetFileList(Widget):

@@ -2,7 +2,7 @@ from typing import Generic, List, Optional, TypeVar
 
 from rich.text import Text
 
-from app.unicodes import RIGHT_TRIANGLE
+from ..unicodes import RIGHT_TRIANGLE
 
 T = TypeVar("T")
 
