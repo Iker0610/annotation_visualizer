@@ -75,6 +75,8 @@ class CorpusTui(App):
 
         self.body: ScrollView | None = None
 
+        self.selected_file = next(iter(self.dataset.keys()))
+
     async def on_load(self) -> None:
         """Sent before going in to application mode."""
         # Bind our basic keys
