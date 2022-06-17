@@ -12,8 +12,10 @@ from .. import styles
 from ..model.model import GroupedAnnotatedDataset
 from ..renderables.scrollable_list import ScrollableList
 
+
 class FileSelected(Message):
     pass
+
 
 class DatasetFileList(Widget):
     scrollable_list: Optional[ScrollableList[GroupedAnnotatedDataset]] = None
@@ -38,7 +40,7 @@ class DatasetFileList(Widget):
             to_render = self.scrollable_list
 
         title = Text.from_markup(
-            "[bold]files[/] ([blue]total[/] [yellow]{}[/])".format(
+            "[bold]Files[/] ([blue]total[/] [yellow]{}[/])".format(
                 len(self.app.dataset)
             )
         )
@@ -85,7 +87,7 @@ class DatasetFileList(Widget):
 
     async def on_click(self, event: events.Click) -> None:
         if self.scrollable_list is not None:
-            self.scrollable_list.pointer = event.y - 1
+            self.scrollable_list.pointer = self.scrollable_list.start_rendering + event.y - 1
             self.app.selected_file = self.scrollable_list.selected
 
         await self.emit(FileSelected(self))
