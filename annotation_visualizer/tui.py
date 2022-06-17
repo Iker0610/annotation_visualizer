@@ -4,10 +4,11 @@ from typing import Optional, Type
 
 from textual.app import App
 from textual.driver import Driver
+from textual.message import Message
 from textual.widgets import ScrollView
 
 from annotation_visualizer.model.model import GroupedAnnotatedDataset, load_grouped_annotated_dataset, AnnotatedText
-from annotation_visualizer.widgets.dataset_file_list import DatasetFileList
+from annotation_visualizer.widgets.dataset_file_list import DatasetFileList, FileSelected
 from annotation_visualizer.widgets.file_view import FileView
 
 
@@ -43,8 +44,6 @@ class CorpusTui(App):
     @selected_annotated_text.setter
     def selected_annotated_text(self, annotated_text: Optional[AnnotatedText]):
         self.__selected_annotated_text = annotated_text
-        self.dataset_file_list_widget.refresh()
-        self.body.refresh()
 
     # Constructor
     def __init__(
@@ -69,7 +68,7 @@ class CorpusTui(App):
         self.dataset: GroupedAnnotatedDataset = load_grouped_annotated_dataset(dataset_path)
 
         self.dataset_file_list_widget = DatasetFileList()
-        self.body = FileView()
+        self.body: ScrollView | None = None
 
     async def on_load(self) -> None:
         """Sent before going in to application mode."""
@@ -79,5 +78,10 @@ class CorpusTui(App):
 
     async def on_mount(self) -> None:
         """Call after terminal goes in to application mode"""
-        await self.view.dock(self.dataset_file_list_widget, edge='left', size=48, name='file_list')
-        await self.view.dock(ScrollView(self.body), edge='right')
+        self.body = ScrollView(FileView())
+
+        await self.view.dock(self.dataset_file_list_widget, edge='left', size=30, name='file_list')
+        await self.view.dock(self.body, edge='top')
+
+    async def handle_file_selected(self, event: FileSelected):
+        await self.body.update(FileView())

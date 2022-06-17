@@ -5,12 +5,15 @@ from rich.panel import Panel
 from rich.text import Text
 from textual import events
 from textual.keys import Keys
+from textual.message import Message
 from textual.widget import Widget
 
 from .. import styles
 from ..model.model import GroupedAnnotatedDataset
 from ..renderables.scrollable_list import ScrollableList
 
+class FileSelected(Message):
+    pass
 
 class DatasetFileList(Widget):
     scrollable_list: Optional[ScrollableList[GroupedAnnotatedDataset]] = None
@@ -73,5 +76,7 @@ class DatasetFileList(Widget):
         if self.scrollable_list is not None:
             self.scrollable_list.pointer = event.y - 1
             self.app.selected_file = self.scrollable_list.selected
+
+        await self.emit(FileSelected(self))
 
         self.refresh()

@@ -4,6 +4,7 @@ from rich.align import Align
 from rich.console import RichCast
 from rich.panel import Panel
 from textual.widget import Widget
+from textual.widgets import ScrollView
 
 from .. import styles
 from ..renderables.colored_annotated_text import ColoredAnnotatedText
