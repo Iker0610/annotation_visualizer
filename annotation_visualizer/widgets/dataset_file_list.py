@@ -64,12 +64,23 @@ class DatasetFileList(Widget):
         self.scrollable_list.previous()
         self.app.selected_file = self.scrollable_list.selected
 
-    def on_key(self, event: events.Key) -> None:
+    async def on_key(self, event: events.Key) -> None:
         if event.key == Keys.Up:
             self.previous()
         elif event.key == Keys.Down:
             self.next()
 
+        await self.emit(FileSelected(self))
+        self.refresh()
+
+    async def on_mouse_scroll_up(self) -> None:
+        self.next()
+        await self.emit(FileSelected(self))
+        self.refresh()
+
+    async def on_mouse_scroll_down(self) -> None:
+        self.previous()
+        await self.emit(FileSelected(self))
         self.refresh()
 
     async def on_click(self, event: events.Click) -> None:
