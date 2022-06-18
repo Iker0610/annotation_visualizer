@@ -7,6 +7,7 @@ from textual.driver import Driver
 from textual.widgets import ScrollView, Footer
 
 from annotation_visualizer.model.model import GroupedAnnotatedDataset, load_grouped_annotated_dataset, AnnotatedText
+from annotation_visualizer.widgets.annotation_labels import AnnotationLabelInfo
 from annotation_visualizer.widgets.annotator_list import AnnotatorSelected, AnnotatorList
 from annotation_visualizer.widgets.dataset_file_list import DatasetFileList, FileSelected
 from annotation_visualizer.widgets.file_view import FileView
@@ -80,8 +81,15 @@ class CorpusTui(App):
     async def on_load(self) -> None:
         """Sent before going in to application mode."""
         # Bind our basic keys
+        await self.bind("A", "toggle_all", "Toggle side columns")
+        await self.bind("a", "toggle_all", "Toggle side columns", show=False)
+
         await self.bind("F", "view.toggle('sidebar')", "Toggle sidebar")
         await self.bind("f", "view.toggle('sidebar')", "Toggle sidebar", show=False)
+
+        await self.bind("L", "view.toggle('labels')", "Toggle label info")
+        await self.bind("l", "view.toggle('labels')", "Toggle label info", show=False)
+
         await self.bind("Q", "quit", "Quit")
         await self.bind("q", "quit", "Quit", show=False)
 
@@ -103,6 +111,7 @@ class CorpusTui(App):
             annotator_list=self.annotator_list_widget,
         )
 
+        await self.view.dock(AnnotationLabelInfo(), edge='right', size=30, name='labels')
         await self.view.dock(self.body, edge='top')
 
     async def handle_file_selected(self, event: FileSelected):
@@ -110,3 +119,7 @@ class CorpusTui(App):
 
     async def handle_annotator_selected(self, event: AnnotatorSelected):
         await self.body.update(FileView())
+
+    async def action_toggle_all(self) -> None:
+        await self.view.action_toggle("labels")
+        await self.view.action_toggle("sidebar")

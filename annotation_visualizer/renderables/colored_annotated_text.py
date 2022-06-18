@@ -7,14 +7,22 @@ style_mapper = {
     "RAZON_CONSULTA": "black on #98c379",
     "ANTECEDENTES_PERSONALES": "black on #d9d9d9",
     "ANTECEDENTES_FAMILIARES": "black on #94aa6d",
-    "EXPLORACION": "black on #c9c5ff",
-    "TRATAMIENTO": "black on #cfe2f3",
+    "EXPLORACION": "black on #9496fb",
+    "TRATAMIENTO": "black on #9ef8fb",
     "EVOLUCION": "black on #6d9eeb",
-    "DIAGNOSTICO_FINAL": "black on #ea9999",
-    "DIAGNOSTICO_DIFERENCIAL": "black on #f5c9de",
-    "DERIVACION_DE/A": "black on #f5c9de",
+    "DIAGNOSTICO_FINAL": "black on #f68989",
+    "DIAGNOSTICO_DIFERENCIAL": "black on #f1aacb",
+    "DERIVACION_DE/A": "black on #f9da55",
 }
 
+class AnnotationLabelList(RichCast):
+    def __rich__(self):
+        content = Text(overflow="ellipsis", no_wrap=True)
+        for label, style in style_mapper.items():
+            content.append(label, style)
+            content.append('\n\n')
+
+        return content
 
 class ColoredAnnotatedText(RichCast):
     def __init__(self, text: AnnotatedText):
