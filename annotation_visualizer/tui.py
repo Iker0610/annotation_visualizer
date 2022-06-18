@@ -4,7 +4,7 @@ from typing import Optional, Type
 
 from textual.app import App
 from textual.driver import Driver
-from textual.widgets import ScrollView
+from textual.widgets import ScrollView, Footer
 
 from annotation_visualizer.model.model import GroupedAnnotatedDataset, load_grouped_annotated_dataset, AnnotatedText
 from annotation_visualizer.widgets.annotator_list import AnnotatorSelected, AnnotatorList
@@ -80,13 +80,16 @@ class CorpusTui(App):
     async def on_load(self) -> None:
         """Sent before going in to application mode."""
         # Bind our basic keys
-        await self.bind("f", "view.toggle('sidebar')", "Toggle sidebar")
-        await self.bind("q", "quit", "Quit")
+        await self.bind("F", "view.toggle('sidebar')", "Toggle sidebar")
+        await self.bind("f", "view.toggle('sidebar')", "Toggle sidebar", show=False)
+        await self.bind("Q", "quit", "Quit")
+        await self.bind("q", "quit", "Quit", show=False)
 
     async def on_mount(self) -> None:
         """Call after terminal goes in to application mode"""
         self.body = ScrollView(FileView())
 
+        await self.view.dock(Footer(), edge='bottom')
         grid = await self.view.dock_grid(edge='left', size=30, name='sidebar')
         grid.add_column(fraction=1, name="left", min_size=30)
         grid.add_row(fraction=6, name="top", min_size=5)
