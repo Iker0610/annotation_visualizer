@@ -9,7 +9,6 @@ from textual.message import Message
 from textual.widget import Widget
 
 from .. import styles
-from ..model.model import GroupedAnnotatedDataset
 from ..renderables.scrollable_list import ScrollableList
 
 

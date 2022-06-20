@@ -12,10 +12,13 @@ from ..renderables.colored_annotated_text import ColoredAnnotatedText
 class FileView(Widget):
     def render(self) -> Panel:
 
-        if self.app.selected_annotated_text is not None:
+        if self.app.selected_file is not None and self.app.selected_annotator is not None:
             title = f"File ([blue]id:[/] [yellow]{self.app.selected_file}[/] - [blue]annotator:[/] [yellow]{self.app.selected_annotator}[/])"
 
-            to_render = ColoredAnnotatedText(self.app.selected_annotated_text)
+            to_render = ColoredAnnotatedText(
+                self.app.dataset[self.app.selected_file]['note_text'],
+                self.app.dataset[self.app.selected_file]['annotator_annotations'][self.app.selected_annotator]['annotations']
+            )
         else:
             title = "File ([blue]id:[/] [yellow]Unselected[/] - [blue]annotator:[/] [yellow]Unselected[/])"
             to_render: Union[Align, RichCast, str] = Align.center(

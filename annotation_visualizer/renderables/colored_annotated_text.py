@@ -1,7 +1,7 @@
 from rich.console import RichCast
 from rich.text import Text
 
-from ..model.model import AnnotatedText
+from ..model.model import Annotation
 
 style_mapper = {
     "RAZON_CONSULTA": "black on #98c379",
@@ -15,6 +15,7 @@ style_mapper = {
     "DERIVACION_DE/A": "black on #f9da55",
 }
 
+
 class AnnotationLabelList(RichCast):
     def __rich__(self):
         content = Text(overflow="ellipsis", no_wrap=True)
@@ -24,12 +25,14 @@ class AnnotationLabelList(RichCast):
 
         return content
 
+
 class ColoredAnnotatedText(RichCast):
-    def __init__(self, text: AnnotatedText):
+    def __init__(self, text: str, annotations: list[Annotation]):
         self.annotated_text = text
+        self.annotations = annotations
 
     def __rich__(self):
-        content = Text(self.annotated_text.note_text)
-        for annotation in self.annotated_text.task_result:
-            content.stylize(style_mapper[annotation.label], annotation.start_position, annotation.end_position)
+        content = Text(self.annotated_text)
+        for annotation in self.annotations:
+            content.stylize(style_mapper[annotation['label']], annotation['start_position'], annotation['end_position'])
         return content

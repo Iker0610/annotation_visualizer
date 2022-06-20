@@ -1,12 +1,11 @@
 import os
 import sys
-from typing import Optional, Type
+from typing import Optional
 
 from textual.app import App
-from textual.driver import Driver
 from textual.widgets import ScrollView, Footer
 
-from annotation_visualizer.model.model import GroupedAnnotatedDataset, load_grouped_annotated_dataset, AnnotatedText
+from annotation_visualizer.model.model import DatasetWithMetrics, NoteWithAnnotations, load_annotations_from_json
 from annotation_visualizer.widgets.annotation_labels import AnnotationLabelInfo
 from annotation_visualizer.widgets.annotator_list import AnnotatorSelected, AnnotatorList
 from annotation_visualizer.widgets.dataset_file_list import DatasetFileList, FileSelected
@@ -16,7 +15,6 @@ from annotation_visualizer.widgets.file_view import FileView
 class CorpusTui(App):
     __selected_file: Optional[str] = None
     __selected_annotator: Optional[str] = None
-    __selected_annotated_text: Optional[AnnotatedText] = None
     available_annotators: Optional[list[str]] = None
 
     # Properties
@@ -28,8 +26,14 @@ class CorpusTui(App):
     def selected_file(self, file: Optional[str]):
         self.__selected_file = file
         self.dataset_file_list_widget.refresh()
-        self.available_annotators = list(self.dataset[file].keys())
-        self.selected_annotator = self.available_annotators[0]
+        self.available_annotators = list(self.dataset[file]['annotator_annotations'].keys())
+
+        if self.selected_annotator not in self.available_annotators:
+            self.selected_annotator = self.available_annotators[0]
+        else:
+            self.annotator_list_widget.refresh()
+
+        self.dataset_file_list_widget.refresh()
 
     @property
     def selected_annotator(self) -> Optional[str]:
@@ -38,30 +42,13 @@ class CorpusTui(App):
     @selected_annotator.setter
     def selected_annotator(self, annotator: Optional[str]):
         self.__selected_annotator = annotator
-        self.selected_annotated_text = self.dataset[self.selected_file][self.selected_annotator]
         self.annotator_list_widget.refresh()
 
-    @property
-    def selected_annotated_text(self) -> Optional[AnnotatedText]:
-        return self.__selected_annotated_text
-
-    @selected_annotated_text.setter
-    def selected_annotated_text(self, annotated_text: Optional[AnnotatedText]):
-        self.__selected_annotated_text = annotated_text
-
     # Constructor
-    def __init__(
-            self,
-            screen: bool = True,
-            driver_class: Optional[Type[Driver]] = None,
-            log_verbosity: int = 1,
-    ) -> None:
-        super().__init__(
-            screen=screen,
-            driver_class=driver_class,
-            log_verbosity=log_verbosity,
-        )
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
+        # Get dataset json file
         try:
             dataset_path = sys.argv[1]
         except IndexError:
@@ -69,8 +56,12 @@ class CorpusTui(App):
                 os.path.join(os.path.basename(__file__), "../dataset/annotations_codiesp.json")
             )
 
-        self.dataset: GroupedAnnotatedDataset = load_grouped_annotated_dataset(dataset_path)
+        # Load dataset
+        dataset_with_metrics: DatasetWithMetrics = load_annotations_from_json(dataset_path)
+        self.dataset: dict[str, NoteWithAnnotations] = dataset_with_metrics['annotated_dataset']
+        self.dataset_metrics = dataset_with_metrics['dataset_metrics']
 
+        # Generate base widgets
         self.dataset_file_list_widget = DatasetFileList()
         self.annotator_list_widget = AnnotatorList()
 
@@ -114,10 +105,10 @@ class CorpusTui(App):
         await self.view.dock(AnnotationLabelInfo(), edge='right', size=30, name='labels')
         await self.view.dock(self.body, edge='top')
 
-    async def handle_file_selected(self, event: FileSelected):
+    async def handle_file_selected(self, _: FileSelected):
         await self.body.update(FileView())
 
-    async def handle_annotator_selected(self, event: AnnotatorSelected):
+    async def handle_annotator_selected(self, _: AnnotatorSelected):
         await self.body.update(FileView())
 
     async def action_toggle_all(self) -> None:
