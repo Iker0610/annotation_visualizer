@@ -9,6 +9,7 @@ from annotation_visualizer.model.model import DatasetWithMetrics, NoteWithAnnota
 from annotation_visualizer.widgets.annotation_labels import AnnotationLabelInfo
 from annotation_visualizer.widgets.annotator_list import AnnotatorSelected, AnnotatorList
 from annotation_visualizer.widgets.dataset_file_list import DatasetFileList, FileSelected
+from annotation_visualizer.widgets.dataset_metric_header import DatasetMetricHeader
 from annotation_visualizer.widgets.file_view import FileView
 
 
@@ -81,6 +82,9 @@ class CorpusTui(App):
         await self.bind("L", "view.toggle('labels')", "Toggle label info")
         await self.bind("l", "view.toggle('labels')", "Toggle label info", show=False)
 
+        await self.bind("M", "view.toggle('dataset_metrics')", "Toggle dataset metrics")
+        await self.bind("m", "view.toggle('dataset_metrics')", "Toggle dataset metrics", show=False)
+
         await self.bind("Q", "quit", "Quit")
         await self.bind("q", "quit", "Quit", show=False)
 
@@ -89,21 +93,38 @@ class CorpusTui(App):
         self.body = ScrollView(FileView())
 
         await self.view.dock(Footer(), edge='bottom')
-        grid = await self.view.dock_grid(edge='left', size=30, name='sidebar')
-        grid.add_column(fraction=1, name="left", min_size=30)
-        grid.add_row(fraction=6, name="top", min_size=5)
-        grid.add_row(fraction=1, name="bottom", min_size=3)
-        grid.add_areas(
+        selection_grid = await self.view.dock_grid(edge='left', size=30, name='sidebar')
+        selection_grid.add_column(fraction=1, name="left", min_size=30)
+        selection_grid.add_row(fraction=6, name="top", min_size=5)
+        selection_grid.add_row(fraction=1, name="bottom", min_size=3)
+        selection_grid.add_areas(
             file_list="left,top",
             annotator_list="left,bottom",
         )
-        grid.place(
+        selection_grid.place(
             file_list=self.dataset_file_list_widget,
             annotator_list=self.annotator_list_widget,
         )
 
         await self.view.dock(AnnotationLabelInfo(), edge='right', size=30, name='labels')
-        await self.view.dock(self.body, edge='top')
+
+        metrics_grid = await self.view.dock_grid(edge='top', size=8, name='dataset_metrics')
+        metrics_grid.add_column(fraction=1, name='center')
+        metrics_grid.add_row(fraction=1, name='top')
+        metrics_grid.add_row(fraction=1, name='bottom')
+        metrics_grid.add_areas(
+            b_metric="center,top",
+            s_metric="center,bottom",
+        )
+        metrics_grid.place(
+            b_metric=DatasetMetricHeader(metric='B'),
+            s_metric=DatasetMetricHeader(metric='S'),
+        )
+
+        await self.view.dock(self.body, edge='bottom')
+
+
+
 
     async def handle_file_selected(self, _: FileSelected):
         await self.body.update(FileView())
@@ -114,3 +135,4 @@ class CorpusTui(App):
     async def action_toggle_all(self) -> None:
         await self.view.action_toggle("labels")
         await self.view.action_toggle("sidebar")
+        await self.view.action_toggle("dataset_metrics")
