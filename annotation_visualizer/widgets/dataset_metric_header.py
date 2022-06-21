@@ -13,12 +13,12 @@ class DatasetMetricHeader(Widget):
 
     def render(self) -> Panel:
         if metrics := self.app.dataset_metrics.get(self.metric):
-            topic_info = DatasetMetricInfo(metrics)
+            to_render = DatasetMetricInfo(metrics)
         else:
-            topic_info = Align.center("This metric is not calculated in you dataset.", vertical="middle")
+            to_render = Align.center("This metric is not calculated in you dataset.", vertical="middle")
 
         return Panel(
-            topic_info,
+            to_render,
             title=f"[bold]Dataset Intertagger Agreement:[/] [yellow]{self.metric}[/]",
             border_style=styles.BORDER,
             box=styles.BOX,

@@ -6,20 +6,16 @@ from annotation_visualizer.model.model import FileMetrics
 from annotation_visualizer.renderables.file_metric_info import FileMetricInfo
 
 
-class FileMetricBlock(Widget):
-    def __init__(self, metric: FileMetrics):
+class FileMetricPanel(Widget):
+    def __init__(self, metrics: FileMetrics):
         super().__init__()
-        self.metric = metric
+        self.metrics = metrics
 
     def render(self) -> Panel:
-        topic_info = FileMetricInfo(self.metric)
-        annotators = ', '.join(self.metric['annotators'])
-
         return Panel(
-            topic_info,
-            title=f"[bold]Annotator Pair:[/] [yellow]{annotators}[/]",
+            FileMetricInfo(self.metrics),
+            title="[bold]Pairwise File Metrics[/]",
             border_style=styles.BORDER,
             box=styles.BOX,
             title_align="left",
-            padding=0,
         )

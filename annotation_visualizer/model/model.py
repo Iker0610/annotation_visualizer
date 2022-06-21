@@ -9,10 +9,13 @@ class DatasetMetrics(TypedDict):
     PI: float
 
 
-class FileMetrics(TypedDict):
+class PairWiseFileMetrics(TypedDict):
     annotators: list[str]
     stats: dict[str, int | list]
     metrics: dict[str, float]
+
+
+FileMetrics = list[PairWiseFileMetrics]
 
 
 class Annotation(TypedDict):
@@ -32,7 +35,7 @@ class NoteWithAnnotations(TypedDict):
     note_id: int
     filename: str
     note_text: str
-    metrics: list
+    metrics: FileMetrics
     annotator_annotations: dict[str, NoteAnnotations]
 
 

@@ -16,4 +16,5 @@ class AnnotationLabelInfo(Widget):
             border_style=styles.BORDER_FOCUSED,
             box=styles.BOX,
             title_align="left",
+            padding=1
         )
