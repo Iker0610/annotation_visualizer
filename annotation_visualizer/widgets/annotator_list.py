@@ -4,7 +4,6 @@ from rich.align import Align
 from rich.panel import Panel
 from rich.text import Text
 from textual import events
-from textual.keys import Keys
 from textual.message import Message
 from textual.widget import Widget
 
@@ -52,23 +51,14 @@ class AnnotatorList(Widget):
             return
 
         self.scrollable_list.next()
-        self.app.selected_annotator = self.scrollable_list.selected
+        self.update_annotator(self.scrollable_list.selected)
 
     def previous(self) -> None:
         if self.scrollable_list is None:
             return
 
         self.scrollable_list.previous()
-        self.app.selected_annotator = self.scrollable_list.selected
-
-    async def on_key(self, event: events.Key) -> None:
-        if event.key == Keys.Up:
-            self.previous()
-        elif event.key == Keys.Down:
-            self.next()
-
-        await self.emit(AnnotatorSelected(self))
-        self.refresh()
+        self.update_annotator(self.scrollable_list.selected)
 
     async def on_mouse_scroll_up(self) -> None:
         self.next()
@@ -83,7 +73,7 @@ class AnnotatorList(Widget):
     async def on_click(self, event: events.Click) -> None:
         if self.scrollable_list is not None:
             self.scrollable_list.pointer = self.scrollable_list.start_rendering + event.y - 1
-            self.app.selected_annotator = self.scrollable_list.selected
+            self.update_annotator(self.scrollable_list.selected)
 
         await self.emit(AnnotatorSelected(self))
 
@@ -92,3 +82,7 @@ class AnnotatorList(Widget):
     def list_reset_and_refresh(self):
         if self.scrollable_list is not None:
             self.scrollable_list.pointer = 0
+
+    def update_annotator(self, annotator: str):
+        self.app.preferred_annotator = annotator
+        self.app.selected_annotator = annotator

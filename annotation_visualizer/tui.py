@@ -19,6 +19,7 @@ from annotation_visualizer.widgets.file_view import FileView
 class CorpusTui(App):
     __selected_file: Optional[str] = None
     __selected_annotator: Optional[str] = None
+    __preferred_annotator: Optional[str] = None
     available_annotators: Optional[list[str]] = None
 
     # Properties
@@ -29,13 +30,16 @@ class CorpusTui(App):
     @selected_file.setter
     def selected_file(self, file: Optional[str]):
         self.__selected_file = file
-        self.dataset_file_list_widget.refresh()
         self.available_annotators = list(self.dataset[file]['annotator_annotations'].keys())
 
-        if self.selected_annotator not in self.available_annotators:
+        if self.preferred_annotator is None:
+            self.preferred_annotator = self.available_annotators[0]
+
+        if self.preferred_annotator not in self.available_annotators:
             self.selected_annotator = self.available_annotators[0]
+
         else:
-            self.annotator_list_widget.refresh()
+            self.selected_annotator = self.preferred_annotator
 
         self.dataset_file_list_widget.refresh()
 
@@ -47,6 +51,14 @@ class CorpusTui(App):
     def selected_annotator(self, annotator: Optional[str]):
         self.__selected_annotator = annotator
         self.annotator_list_widget.refresh()
+
+    @property
+    def preferred_annotator(self) -> Optional[str]:
+        return self.__preferred_annotator
+
+    @preferred_annotator.setter
+    def preferred_annotator(self, annotator: Optional[str]):
+        self.__preferred_annotator = annotator
 
     # Constructor
     def __init__(self, *args, **kwargs) -> None:
