@@ -2,7 +2,9 @@ import os
 import sys
 from typing import Optional
 
+from textual import events
 from textual.app import App
+from textual.keys import Keys
 from textual.widgets import ScrollView, Footer
 
 from annotation_visualizer.model.model import DatasetWithMetrics, NoteWithAnnotations, load_annotations_from_json
@@ -148,3 +150,7 @@ class CorpusTui(App):
         await self.view.action_toggle("labels")
         await self.view.action_toggle("sidebar")
         await self.view.action_toggle("metrics")
+
+    async def on_key(self, event: events.Key) -> None:
+        if event.key in [Keys.Up, Keys.Down]:
+            await self.dataset_file_list_widget.on_key(event)
