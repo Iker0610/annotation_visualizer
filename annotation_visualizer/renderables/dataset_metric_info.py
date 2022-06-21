@@ -4,7 +4,7 @@ from rich.table import Table
 from annotation_visualizer.model.model import DatasetMetrics
 
 
-class DatasetLabelInfo(RichCast):
+class DatasetMetricInfo(RichCast):
     def __init__(self, metrics: DatasetMetrics) -> None:
         self.metrics: DatasetMetrics = metrics
 
