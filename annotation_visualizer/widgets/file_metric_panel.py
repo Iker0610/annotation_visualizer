@@ -1,3 +1,4 @@
+from rich.align import Align
 from rich.panel import Panel
 from textual.widget import Widget
 
@@ -12,8 +13,13 @@ class FileMetricPanel(Widget):
         self.metrics = metrics
 
     def render(self) -> Panel:
+
+        if self.metrics:
+            content = FileMetricInfo(self.metrics)
+        else:
+            content = Align.center("There are not available metrics.", vertical="middle")
         return Panel(
-            FileMetricInfo(self.metrics),
+            content,
             title="[bold]Pairwise File Metrics[/]",
             border_style=styles.BORDER,
             box=styles.BOX,
