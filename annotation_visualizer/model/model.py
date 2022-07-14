@@ -19,7 +19,6 @@ FileMetrics = list[PairWiseFileMetrics]
 
 
 class Annotation(TypedDict):
-    id: str
     entity: str
     start_position: int
     end_position: int
@@ -32,7 +31,6 @@ class NoteAnnotations(TypedDict):
 
 
 class NoteWithAnnotations(TypedDict):
-    note_id: int
     filename: str
     note_text: str
     metrics: FileMetrics

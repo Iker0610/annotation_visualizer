@@ -11,7 +11,6 @@ from annotation_visualizer.model.model import DatasetWithMetrics, NoteWithAnnota
 from annotation_visualizer.widgets.annotation_labels import AnnotationLabelInfo
 from annotation_visualizer.widgets.annotator_list import AnnotatorSelected, AnnotatorList
 from annotation_visualizer.widgets.dataset_file_list import DatasetFileList, FileSelected
-from annotation_visualizer.widgets.dataset_metric_header import DatasetMetricHeader
 from annotation_visualizer.widgets.file_metric_panel import FileMetricPanel
 from annotation_visualizer.widgets.file_view import FileView
 
@@ -133,13 +132,13 @@ class CorpusTui(App):
         metrics_grid.add_row(fraction=1, name='top')
         metrics_grid.add_row(fraction=1, name='bottom')
         metrics_grid.add_areas(
-            b_metric="dataset_metrics,top",
-            s_metric="dataset_metrics,bottom",
-            file_metrics="file_metrics,top-start|bottom-end"
+            # b_metric="dataset_metrics,top",
+            # s_metric="dataset_metrics,bottom",
+            file_metrics="dataset_metrics-start|file_metrics-end,top-start|bottom-end"
         )
         metrics_grid.place(
-            b_metric=DatasetMetricHeader(metric='B'),
-            s_metric=DatasetMetricHeader(metric='S'),
+            # b_metric=DatasetMetricHeader(metric='B'),
+            # s_metric=DatasetMetricHeader(metric='S'),
             file_metrics=self.file_metrics,
         )
 

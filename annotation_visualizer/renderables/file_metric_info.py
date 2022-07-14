@@ -7,6 +7,7 @@ from annotation_visualizer.model.model import FileMetrics
 class FileMetricInfo(RichCast):
     def __init__(self, metrics: FileMetrics) -> None:
         self.metrics: FileMetrics = metrics
+        self.second_metric = 'S' if 'S' in metrics else 'B2'
 
     def __rich__(self) -> Group:
         content = []
@@ -19,7 +20,7 @@ class FileMetricInfo(RichCast):
 
             table.add_row(
                 "B:", str(metric['metrics']['B']),
-                "S:", str(metric['metrics']['S'])
+                f"{self.second_metric}:", str(metric['metrics'][self.second_metric])
             )
             table.add_row(
                 "PBs:", str(metric['stats']['pbs']),
