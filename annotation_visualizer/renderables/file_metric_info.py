@@ -7,11 +7,12 @@ from annotation_visualizer.model.model import FileMetrics
 class FileMetricInfo(RichCast):
     def __init__(self, metrics: FileMetrics) -> None:
         self.metrics: FileMetrics = metrics
-        self.second_metric = 'S' if 'S' in metrics else 'B2'
 
     def __rich__(self) -> Group:
         content = []
-        for metric in self.metrics:
+        for index, metric in enumerate(self.metrics, start=1):
+            second_metric = 'S' if 'S' in metric['metrics'] else 'B2'
+
             table = Table(box=None, expand=False, show_header=False, show_edge=False)
             table.add_column(style="bright_magenta bold")
             table.add_column(style="yellow bold")
@@ -19,8 +20,8 @@ class FileMetricInfo(RichCast):
             table.add_column(style="yellow bold")
 
             table.add_row(
-                "B:", str(metric['metrics']['B']),
-                f"{self.second_metric}:", str(metric['metrics'][self.second_metric])
+                "B:", str(round(metric['metrics']['B'] * 100, 2)),
+                f"{second_metric}:", str(round(metric['metrics'][second_metric] * 100, 2))
             )
             table.add_row(
                 "PBs:", str(metric['stats']['pbs']),
@@ -36,8 +37,11 @@ class FileMetricInfo(RichCast):
             )
 
             content += [
-                f"[bold]Annotator Pair:[/] [yellow]{', '.join(metric['annotators'])}[/]\n",
-                table
+                f"[bold]Annotator Pair:[/] [yellow]{', '.join(metric['annotators'])}[/]",
+                table,
             ]
+
+            if index != len(self.metrics):
+                content.append('\n')
 
         return Group(*content)

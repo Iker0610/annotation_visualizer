@@ -11,6 +11,7 @@ from annotation_visualizer.model.model import DatasetWithMetrics, NoteWithAnnota
 from annotation_visualizer.widgets.annotation_labels import AnnotationLabelInfo
 from annotation_visualizer.widgets.annotator_list import AnnotatorSelected, AnnotatorList
 from annotation_visualizer.widgets.dataset_file_list import DatasetFileList, FileSelected
+from annotation_visualizer.widgets.dataset_metric_header import DatasetMetricHeader
 from annotation_visualizer.widgets.file_metric_panel import FileMetricPanel
 from annotation_visualizer.widgets.file_view import FileView
 
@@ -111,15 +112,18 @@ class CorpusTui(App):
 
         await self.view.dock(Footer(), edge='bottom')
 
-        selection_grid = await self.view.dock_grid(edge='left', size=30, name='sidebar')
+        selection_grid = await self.view.dock_grid(edge='left', size=35, name='sidebar')
         selection_grid.add_column(fraction=1, name="left", min_size=30)
-        selection_grid.add_row(fraction=6, name="top", min_size=5)
-        selection_grid.add_row(fraction=1, name="bottom", min_size=3)
+        selection_grid.add_row(fraction=1, name="top", min_size=5)
+        selection_grid.add_row(fraction=12, name="center", min_size=5)
+        selection_grid.add_row(fraction=2, name="bottom", min_size=3)
         selection_grid.add_areas(
-            file_list="left,top",
+            dataset_metrics="left,top",
+            file_list="left,center",
             annotator_list="left,bottom",
         )
         selection_grid.place(
+            dataset_metrics=DatasetMetricHeader(metric='S' if 'S' in self.dataset_metrics else 'B2'),
             file_list=self.dataset_file_list_widget,
             annotator_list=self.annotator_list_widget,
         )

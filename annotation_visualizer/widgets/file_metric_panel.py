@@ -21,7 +21,7 @@ class FileMetricPanel(Widget):
         return Panel(
             content,
             title="[bold]Pairwise File Metrics[/]",
-            border_style=styles.BORDER,
+            border_style=styles.BORDER_FOCUSED,
             box=styles.BOX,
             title_align="left",
         )

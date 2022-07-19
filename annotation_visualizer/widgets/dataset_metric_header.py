@@ -20,7 +20,7 @@ class DatasetMetricHeader(Widget):
         return Panel(
             to_render,
             title=f"[bold]Dataset Intertagger Agreement:[/] [yellow]{self.metric}[/]",
-            border_style=styles.BORDER,
+            border_style=styles.BORDER_FOCUSED,
             box=styles.BOX,
             title_align="left",
             padding=0,
